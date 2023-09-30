@@ -10,19 +10,20 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
+
     const { name } = body;
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
     }
 
-    const store = prismadb.store.create({
+    const store = await prismadb.store.create({
       data: {
         name,
         userId,
       },
     });
-    return NextResponse.json(store);
+    return NextResponse.json(store, { status: 201 });
   } catch (error) {
     console.log("[STORES] [POST] error", error);
     return new NextResponse("Internal server error", { status: 500 });
